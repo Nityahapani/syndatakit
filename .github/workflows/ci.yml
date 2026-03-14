@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "dev"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  test:
+    name: Test Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas numpy scipy flask pytest pytest-cov
+
+      - name: Install package (editable)
+        run: pip install -e .
+
+      - name: Run tests
+        run: pytest tests/ -v --tb=short --cov=syndatakit --cov-report=term-missing
+
+      - name: Verify CLI entrypoint
+        run: syndatakit list
+
+      - name: Verify Python import
+        run: |
+          python -c "
+          import syndatakit as sdk
+          print('version:', sdk.__version__)
+          from syndatakit.generators import GaussianCopulaGenerator
+          from syndatakit.catalog import load_seed
+          gen = GaussianCopulaGenerator()
+          gen.fit(load_seed('hmda'))
+          df = gen.sample(50, seed=42)
+          assert len(df) == 50
+          print('smoke test passed')
+          "

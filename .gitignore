@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.log
+
+# Virtual environments
+.venv/
+venv/
+env/
+.env
+
+# Distribution
+dist/
+build/
+*.tar.gz
+*.whl
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Project specific
+output.csv
+output.json
+output.parquet
+synthetic_*.csv
+real_*.csv
+*_synthetic.csv
+*_sample.csv
+fidelity_report.json
+privacy_audit.json

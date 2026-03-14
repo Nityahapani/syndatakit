@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name            = "syndatakit"
+version         = "2.0.0"
+description     = "Research-grade synthetic data for finance & econometrics"
+readme          = "README.md"
+license         = { text = "BSL-1.1" }
+requires-python = ">=3.9"
+keywords        = [
+    "synthetic data", "finance", "econometrics", "machine learning",
+    "privacy", "differential privacy", "HMDA", "FRED", "data generation",
+    "gaussian copula", "VAR", "panel data",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Office/Business :: Financial",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pandas>=1.5",
+    "numpy>=1.23",
+    "scipy>=1.9",
+]
+
+[project.optional-dependencies]
+api    = ["flask>=2.3"]
+io     = ["pyarrow>=12", "openpyxl>=3.1", "pyreadstat>=1.2"]
+deep   = ["ctgan>=0.9", "torch>=2.0"]
+dev    = [
+    "flask>=2.3",
+    "pytest>=7",
+    "pytest-cov",
+    "build",
+    "twine",
+    "pyarrow>=12",
+    "openpyxl>=3.1",
+]
+all    = ["syndatakit[api,io,deep]"]
+
+[project.scripts]
+syndatakit = "syndatakit.cli:main"
+
+[project.urls]
+Homepage      = "https://github.com/yourhandle/syndatakit"
+Documentation = "https://github.com/yourhandle/syndatakit#readme"
+Issues        = "https://github.com/yourhandle/syndatakit/issues"
+
+[tool.setuptools.packages.find]
+where   = ["."]
+include = ["syndatakit*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
