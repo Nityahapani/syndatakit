@@ -368,6 +368,101 @@ def audit():
     )
 
 
+@app.route("/generate/custom", methods=["POST"])
+@_timed
+def generate_custom():
+    """
+    POST /generate/custom  (multipart/form-data)
+    Upload your own CSV and generate synthetic data from it.
+
+    Fields:
+        file   : CSV file to fit the generator on (required)
+        rows   : number of rows to generate (default: 1000, max: 50000)
+        format : json | csv (default: json)
+        seed   : random seed (optional)
+
+    Example:
+        curl -X POST http://localhost:5000/generate/custom           -F file=@my_data.csv           -F rows=5000           -F format=csv           --output synthetic.csv
+    """
+    import pandas as pd
+    from syndatakit.generators import GaussianCopulaGenerator
+    from syndatakit.io import validate as validate_df
+
+    if "file" not in request.files:
+        return _err("'file' field is required. Upload a CSV file.")
+
+    rows   = min(int(request.form.get("rows",   1000)),  50_000)
+    fmt    = request.form.get("format", "json").lower()
+    seed   = request.form.get("seed")
+    seed   = int(seed) if seed else None
+
+    try:
+        df_real = pd.read_csv(request.files["file"])
+    except Exception as e:
+        return _err(f"Could not parse uploaded file: {e}")
+
+    if df_real.empty:
+        return _err("Uploaded file is empty.")
+
+    # Validate
+    result = validate_df(df_real, min_rows=10)
+    if not result.passed:
+        return _err(f"Data validation failed: {result.errors}", 400)
+
+    # Fit and generate
+    try:
+        t0  = time.time()
+        gen = GaussianCopulaGenerator()
+        gen.fit(df_real)
+        syn = gen.sample(rows, seed=seed)
+        elapsed = round((time.time()-t0)*1000, 1)
+    except Exception as e:
+        traceback.print_exc()
+        return _err(f"Generation failed: {e}", 500)
+
+    meta = {
+        "rows_generated":  len(syn),
+        "rows_requested":  rows,
+        "input_rows":      len(df_real),
+        "input_columns":   list(df_real.columns),
+        "generation_ms":   elapsed,
+    }
+
+    if fmt == "csv":
+        return Response(
+            syn.to_csv(index=False), mimetype="text/csv",
+            headers={
+                "Content-Disposition": "attachment; filename=custom_synthetic.csv",
+                "X-Rows-Generated":    str(len(syn)),
+                "X-Generation-Ms":     str(elapsed),
+            },
+        )
+
+    return _ok(syn.to_dict(orient="records"), meta=meta)
+
+
+@app.route("/schemas")
+@_timed
+def get_schemas():
+    """
+    GET /schemas
+    Returns column names and inferred types for all built-in datasets.
+    Useful for understanding what to put in filters.
+    """
+    from syndatakit.catalog import load_seed
+    schemas = {}
+    for did in DATASETS:
+        try:
+            df = load_seed(did)
+            schemas[did] = {
+                col: str(dtype)
+                for col, dtype in df.dtypes.items()
+            }
+        except Exception:
+            pass
+    return _ok(schemas, meta={"count": len(schemas)})
+
+
 @app.route("/scenarios")
 @_timed
 def get_scenarios():
