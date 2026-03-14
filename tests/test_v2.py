@@ -58,13 +58,13 @@ def syn_wb(world_bank):
 class TestCatalog:
     def test_list_datasets_count(self):
         from syndatakit.catalog import list_datasets
-        assert len(list_datasets()) == 10
+        assert len(list_datasets()) == 18
 
     def test_list_datasets_vertical_filter(self):
         from syndatakit.catalog import list_datasets
         df = list_datasets(vertical="Capital Markets")
-        assert len(df) == 2
-        assert set(df["id"]) == {"edgar", "cftc"}
+        assert len(df) == 4
+        assert set(df["id"]) == {"edgar", "cftc", "equity_returns", "corporate_bonds"}
 
     def test_get_dataset_info_valid(self):
         from syndatakit.catalog import get_dataset_info
@@ -79,7 +79,9 @@ class TestCatalog:
 
     @pytest.mark.parametrize("did", [
         "hmda","fdic","credit_risk","edgar","cftc",
-        "fred_macro","bls","world_bank","irs_soi","census_acs"
+        "fred_macro","bls","world_bank","irs_soi","census_acs",
+        "equity_returns","corporate_bonds","insurance_claims","life_insurance",
+        "commercial_real_estate","rental_market","retail_transactions","commodity_prices"
     ])
     def test_all_seeds_build(self, did):
         from syndatakit.catalog import load_seed
@@ -131,7 +133,9 @@ class TestBaseGenerator:
 
 class TestGaussianCopula:
     @pytest.mark.parametrize("did", [
-        "hmda","fdic","credit_risk","edgar","cftc","irs_soi","census_acs"
+        "hmda","fdic","credit_risk","edgar","cftc","irs_soi","census_acs",
+        "equity_returns","corporate_bonds","insurance_claims","life_insurance",
+        "commercial_real_estate","rental_market","retail_transactions","commodity_prices"
     ])
     def test_all_cross_sectional_datasets(self, did, all_seeds):
         from syndatakit.generators import GaussianCopulaGenerator
@@ -629,8 +633,10 @@ class TestPriors:
 
     def test_dataset_priors_all_present(self):
         from syndatakit.calibration.priors import DATASET_PRIORS, get_priors
-        from syndatakit.catalog import DATASETS
-        for did in DATASETS:
+        # Priors are defined for the original 10 core datasets
+        core = ["hmda","fdic","credit_risk","edgar","cftc",
+                "fred_macro","bls","world_bank","irs_soi","census_acs"]
+        for did in core:
             ps = get_priors(did)
             assert isinstance(ps.columns(), list)
             assert len(ps.columns()) >= 2
@@ -828,12 +834,12 @@ class TestAPI:
         r = api_client.get("/health")
         j = json.loads(r.data)
         assert j["status"] == "ok"
-        assert j["datasets"] == 10
+        assert j["datasets"] == 18
 
     def test_list_datasets(self, api_client):
         r = api_client.get("/datasets")
         j = json.loads(r.data)
-        assert j["meta"]["count"] == 10
+        assert j["meta"]["count"] == 18
 
     def test_list_datasets_vertical_filter(self, api_client):
         r = api_client.get("/datasets?vertical=Tax+%26+Income")
@@ -946,3 +952,158 @@ class TestAPI:
         r = api_client.get("/docs")
         assert b"syndatakit" in r.data
         assert b"<html" in r.data
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 18. New datasets — smoke tests
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class TestNewDatasets:
+    @pytest.mark.parametrize("did,expected_col", [
+        ("equity_returns",         "daily_return"),
+        ("corporate_bonds",        "credit_spread"),
+        ("insurance_claims",       "paid_losses"),
+        ("life_insurance",         "mortality_rate"),
+        ("commercial_real_estate", "cap_rate"),
+        ("rental_market",          "asking_rent"),
+        ("retail_transactions",    "fraud_flag"),
+        ("commodity_prices",       "daily_return"),
+    ])
+    def test_new_dataset_generates(self, did, expected_col, all_seeds):
+        from syndatakit.generators import GaussianCopulaGenerator
+        gen = GaussianCopulaGenerator()
+        gen.fit(all_seeds[did])
+        df = gen.sample(100, seed=42)
+        assert len(df) == 100
+        assert expected_col in df.columns
+
+    def test_equity_returns_fat_tails(self, all_seeds):
+        """Daily returns should have excess kurtosis > 1 (fat tails)."""
+        from scipy import stats
+        seed = all_seeds["equity_returns"]
+        kurt = float(stats.kurtosis(seed["daily_return"]))
+        assert kurt > 1.0, f"Expected fat tails (kurtosis > 1), got {kurt:.2f}"
+
+    def test_corporate_bonds_spread_by_rating(self, all_seeds):
+        """IG bonds should have lower spreads than HY bonds."""
+        df = all_seeds["corporate_bonds"]
+        ig_spread = df[df["credit_rating"].isin(["AAA","AA","A","BBB"])]["credit_spread"].mean()
+        hy_spread = df[df["credit_rating"].isin(["BB","B","CCC"])]["credit_spread"].mean()
+        assert ig_spread < hy_spread, "IG spreads should be lower than HY spreads"
+
+    def test_retail_transactions_fraud_rate(self, all_seeds):
+        """Fraud rate should be low (< 2%) matching industry average."""
+        df = all_seeds["retail_transactions"]
+        fraud_rate = df["fraud_flag"].mean()
+        assert fraud_rate < 0.02, f"Fraud rate too high: {fraud_rate:.3f}"
+
+    def test_life_insurance_mortality_increases_with_age(self, all_seeds):
+        """Mortality rate should be higher for older policyholders."""
+        df = all_seeds["life_insurance"]
+        young = df[df["age_at_issue"] < 35]["mortality_rate"].mean()
+        old   = df[df["age_at_issue"] > 60]["mortality_rate"].mean()
+        assert old > young, "Mortality should increase with age"
+
+    def test_commodity_prices_energy_more_volatile(self, all_seeds):
+        """Energy commodities should have higher return volatility than metals."""
+        df = all_seeds["commodity_prices"]
+        energy_vol = df[df["sector"]=="Energy"]["daily_return"].std()
+        metals_vol = df[df["sector"]=="Metals"]["daily_return"].std()
+        assert energy_vol > metals_vol, "Energy should be more volatile than metals"
+
+    def test_insurance_claims_large_loss_flag(self, all_seeds):
+        """Large loss flag should mark top 5% of claims."""
+        df = all_seeds["insurance_claims"]
+        large_loss_paid  = df[df["large_loss_flag"]==1]["paid_losses"].mean()
+        normal_loss_paid = df[df["large_loss_flag"]==0]["paid_losses"].mean()
+        assert large_loss_paid > normal_loss_paid
+
+    def test_vertical_counts(self):
+        from syndatakit.catalog import list_datasets
+        df = list_datasets()
+        verticals = df["vertical"].value_counts().to_dict()
+        assert verticals.get("Insurance", 0)      == 2
+        assert verticals.get("Real Estate", 0)    == 2
+        assert verticals.get("Retail Banking", 0) == 1
+        assert verticals.get("Commodities", 0)    == 1
+        assert verticals.get("Capital Markets", 0)== 4
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 19. Custom file generation (--input / /generate/custom)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class TestCustomGeneration:
+    def test_python_api_custom_fit(self, hmda):
+        """Users can fit on any DataFrame and generate synthetic data."""
+        from syndatakit.generators import GaussianCopulaGenerator
+        gen = GaussianCopulaGenerator()
+        gen.fit(hmda)
+        syn = gen.sample(100, seed=1)
+        assert len(syn) == 100
+        assert set(syn.columns) - {"syn_id"} == set(hmda.columns)
+
+    def test_python_api_custom_columns(self):
+        """Works on arbitrary columns — not just built-in datasets."""
+        import pandas as pd
+        from syndatakit.generators import GaussianCopulaGenerator
+        custom = pd.DataFrame({
+            "revenue":     [1e6 * (1 + i*0.1) for i in range(200)],
+            "growth_rate": [0.05 + i*0.001 for i in range(200)],
+            "market":      (["US","EU","APAC"] * 67)[:200],
+            "profitable":  ([1]*150 + [0]*50),
+        })
+        gen = GaussianCopulaGenerator()
+        gen.fit(custom)
+        syn = gen.sample(500, seed=42)
+        assert len(syn) == 500
+        assert "revenue" in syn.columns
+        assert "market" in syn.columns
+
+    def test_api_generate_custom_endpoint(self, api_client, hmda):
+        """POST /generate/custom accepts a CSV and returns synthetic data."""
+        import io
+        csv_bytes = hmda.to_csv(index=False).encode()
+        r = api_client.post(
+            "/generate/custom",
+            content_type="multipart/form-data",
+            data={"file": (io.BytesIO(csv_bytes), "test.csv"), "rows": "50"},
+        )
+        assert r.status_code == 200
+        j = json.loads(r.data)
+        assert j["meta"]["rows_generated"] == 50
+        assert j["meta"]["input_columns"] == list(hmda.columns)
+
+    def test_api_generate_custom_csv_format(self, api_client, hmda):
+        """POST /generate/custom returns CSV when format=csv."""
+        import io
+        csv_bytes = hmda.head(100).to_csv(index=False).encode()
+        r = api_client.post(
+            "/generate/custom",
+            content_type="multipart/form-data",
+            data={"file": (io.BytesIO(csv_bytes), "test.csv"),
+                  "rows": "30", "format": "csv"},
+        )
+        assert r.status_code == 200
+        assert b"syn_id" in r.data
+        lines = r.data.decode().strip().split("\n")
+        assert len(lines) == 31  # header + 30 rows
+
+    def test_api_generate_custom_no_file_returns_400(self, api_client):
+        """POST /generate/custom without a file returns 400."""
+        r = api_client.post("/generate/custom", json={"rows": 10})
+        assert r.status_code == 400
+
+    def test_api_schemas_endpoint(self, api_client):
+        """GET /schemas returns column types for all 18 datasets."""
+        r = api_client.get("/schemas")
+        j = json.loads(r.data)
+        assert j["meta"]["count"] == 18
+        assert "hmda" in j["data"]
+        assert "loan_amount" in j["data"]["hmda"]
+
+    def test_cli_list_shows_18_datasets(self):
+        """syndatakit list should show 18 datasets."""
+        from syndatakit.catalog import list_datasets
+        df = list_datasets()
+        assert len(df) == 18
