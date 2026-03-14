@@ -182,7 +182,19 @@ def cmd_info(args):
 
 
 def cmd_generate(args):
-    header(f"Generating: {args.dataset}", f"generator={args.generator}  rows={args.rows:,}")
+    # ── Custom input file OR built-in dataset ─────────────────────────────────
+    input_file = getattr(args, "input", None)
+    dataset_id = getattr(args, "dataset", None)
+
+    if not input_file and not dataset_id:
+        err("Provide a dataset ID (e.g. syndatakit generate hmda) ")
+        err("or your own file (e.g. syndatakit generate --input data.csv)")
+        sys.exit(1)
+
+    if input_file:
+        header(f"Generating from: {input_file}", f"rows={args.rows:,}")
+    else:
+        header(f"Generating: {dataset_id}", f"generator={args.generator}  rows={args.rows:,}")
 
     filters = _parse_filters(getattr(args, "filter", None))
     if filters:
@@ -193,7 +205,26 @@ def cmd_generate(args):
     print()
     info("Fitting generator...")
     try:
-        gen, seed_df, gen_type = _load_generator(args.dataset, args.generator)
+        if input_file:
+            # Custom file — validate, load, fit GaussianCopula
+            from pathlib import Path
+            if not Path(input_file).exists():
+                err(f"File not found: {input_file}"); sys.exit(1)
+            from syndatakit.io import read, validate as validate_df
+            from syndatakit.generators import GaussianCopulaGenerator
+            seed_df = read(input_file)
+            result = validate_df(seed_df, min_rows=10)
+            if not result.passed:
+                for e_msg in result.errors: err(e_msg)
+                sys.exit(1)
+            if result.warnings:
+                for w_msg in result.warnings: warn(w_msg)
+            gen = GaussianCopulaGenerator()
+            gen.fit(seed_df)
+            gen_type = "copula"
+            info(f"Loaded {len(seed_df):,} rows × {len(seed_df.columns)} columns from {input_file}")
+        else:
+            gen, seed_df, gen_type = _load_generator(dataset_id, args.generator)
     except ValueError as e:
         err(str(e)); sys.exit(1)
     ok(f"{gen}  [{gen_type}]  ({time.time()-t0:.1f}s)")
@@ -228,7 +259,12 @@ def cmd_generate(args):
         info("Running fidelity report...")
         dataset_type = {"var": "time_series", "panel": "panel"}.get(gen_type, "cross_sectional")
         syn_body = syn.drop(columns=["syn_id"], errors="ignore")
-        report = fidelity_report(seed_df, syn_body, dataset_type=dataset_type)
+        try:
+            report = fidelity_report(seed_df, syn_body, dataset_type=dataset_type)
+        except Exception as fe:
+            warn(f"Fidelity report skipped: {fe}")
+            report = None
+    if not getattr(args, "no_eval", False) and report is not None:
         s = report["summary"]
 
         section("Fidelity report")
@@ -454,6 +490,53 @@ def cmd_validate(args):
     print()
 
 
+def cmd_download(args):
+    from syndatakit.catalog.downloader import download, status, DOWNLOADERS, is_cached
+
+    if args.dataset == "status":
+        header("Download status")
+        df = status()
+        for _, row in df.iterrows():
+            icon = _c("✓", C.GREEN) if "cached" in row["status"] else _c("○", C.GRAY)
+            print(f"    {icon} {row['dataset']:<28} {row['rows']:<12} {row['size']}")
+        print()
+        dim("  Run: syndatakit download <id>   to download real data")
+        dim("  Run: syndatakit download all    to download everything")
+        print()
+        return
+
+    dataset_id = args.dataset
+
+    if dataset_id != "all" and dataset_id not in DOWNLOADERS:
+        err(f"No downloader for '{dataset_id}'.")
+        info(f"Available: {', '.join(DOWNLOADERS)}")
+        info("For other datasets, use gen.fit(your_csv) to bring your own data.")
+        sys.exit(1)
+
+    header(f"Downloading: {dataset_id}", "real data from public sources")
+
+    if dataset_id != "all" and is_cached(dataset_id) and not args.force:
+        warn(f"Already cached. Use --force to re-download.")
+        return
+
+    try:
+        result = download(dataset_id, force=args.force, n_sample=args.sample)
+        if isinstance(result, dict):
+            print()
+            ok(f"Downloaded {len(result)} datasets")
+        else:
+            print()
+            ok(f"{len(result):,} rows cached")
+            info(f"Generator will now use real data for '{dataset_id}'")
+    except ValueError as e:
+        err(str(e))
+        sys.exit(1)
+    except Exception as e:
+        err(f"Download failed: {e}")
+        sys.exit(1)
+    print()
+
+
 def cmd_serve(args):
     header("Starting API server", f"http://localhost:{args.port}/docs")
 
@@ -503,8 +586,11 @@ def main():
 
     # generate
     p = sub.add_parser("generate", help="Generate synthetic data.")
-    p.add_argument("dataset")
-    p.add_argument("--rows",      type=int,   default=1000,         metavar="N")
+    p.add_argument("dataset", nargs="?", default=None,
+                   help="Built-in dataset ID (e.g. hmda). Omit if using --input.")
+    p.add_argument("--input",    type=str,   default=None,         metavar="FILE",
+                   help="Path to your own CSV. Fit the generator on it instead of a built-in dataset.")
+    p.add_argument("--rows",     type=int,   default=1000,         metavar="N")
     p.add_argument("--output",    type=str,   default="output.csv", metavar="FILE",
                    help="Output path. Extension determines format: .csv .json .dta .xlsx")
     p.add_argument("--generator", type=str,   default="auto",       metavar="TYPE",
@@ -569,6 +655,14 @@ def main():
     p.add_argument("--max-cardinality",type=int,   default=500,  metavar="N")
     p.add_argument("--min-rows",       type=int,   default=50,   metavar="N")
     p.set_defaults(func=cmd_validate)
+
+    # download
+    p = sub.add_parser("download", help="Download real bulk data from public sources.")
+    p.add_argument("dataset", help="Dataset ID, 'all', or 'status'")
+    p.add_argument("--force",  action="store_true", help="Re-download even if cached")
+    p.add_argument("--sample", type=int, default=50000, metavar="N",
+                   help="Max rows to cache (default: 50000)")
+    p.set_defaults(func=cmd_download)
 
     # serve
     p = sub.add_parser("serve", help="Start REST API server.")
