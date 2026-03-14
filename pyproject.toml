@@ -52,9 +52,9 @@ all    = ["syndatakit[api,io,deep]"]
 syndatakit = "syndatakit.cli:main"
 
 [project.urls]
-Homepage      = "https://github.com/yourhandle/syndatakit"
-Documentation = "https://github.com/yourhandle/syndatakit#readme"
-Issues        = "https://github.com/yourhandle/syndatakit/issues"
+Homepage      = "https://github.com/Nityahapani/syndatakit"
+Documentation = "https://github.com/Nityahapani/syndatakit#readme"
+Issues        = "https://github.com/Nityahapani/syndatakit/issues"
 
 [tool.setuptools.packages.find]
 where   = ["."]
