@@ -18,7 +18,7 @@ from .privacy                              import privacy_audit, format_audit
 from .calibration                          import apply_scenario, list_scenarios
 from .io                                   import read, write, validate
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 __all__ = [
     "BaseGenerator","GaussianCopulaGenerator","VARGenerator","FixedEffectsGenerator",
     "list_datasets","get_dataset_info","load_seed",
