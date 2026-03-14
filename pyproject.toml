@@ -34,6 +34,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+vine       = ["pyvinecopulib>=0.6"]
+timeseries = ["statsmodels>=0.14", "arch>=6.0"]
 api    = ["flask>=2.3"]
 io     = ["pyarrow>=12", "openpyxl>=3.1", "pyreadstat>=1.2"]
 deep   = ["ctgan>=0.9", "torch>=2.0"]
@@ -53,8 +55,8 @@ syndatakit = "syndatakit.cli:main"
 
 [project.urls]
 Homepage      = "https://github.com/Nityahapani/syndatakit"
-Documentation = "https://github.com/Nityahapani/syndatakit#readme"
-Issues        = "https://github.com/Nityahapani/syndatakit/issues"
+Documentation = "https://github.com/yourhandle/syndatakit#readme"
+Issues        = "https://github.com/yourhandle/syndatakit/issues"
 
 [tool.setuptools.packages.find]
 where   = ["."]
