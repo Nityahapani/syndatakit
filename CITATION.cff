@@ -36,9 +36,8 @@ abstract: >
 authors:
   - family-names: Hapani
     given-names: Nitya
-    orcid: https://orcid.org/0000-0000-0000-0000   # replace with your ORCID
     affiliation: Independent
-    email: nitya@syndatakit.com
+    email: nityahapani.tges@gmail.com
 
 keywords:
   - synthetic data
@@ -51,52 +50,3 @@ keywords:
   - panel data
   - reproducible research
   - data privacy
-
-references:
-  - type: article
-    authors:
-      - family-names: Sklar
-        given-names: A.
-    title: "Fonctions de repartition a n dimensions et leurs marges"
-    year: 1959
-    journal: "Publications de l'Institut de Statistique de l'Universite de Paris"
-    volume: 8
-    pages: "229-231"
-
-  - type: article
-    authors:
-      - family-names: Dwork
-        given-names: Cynthia
-      - family-names: McSherry
-        given-names: Frank
-      - family-names: Nissim
-        given-names: Kobbi
-      - family-names: Smith
-        given-names: Adam
-    title: "Calibrating noise to sensitivity in private data analysis"
-    year: 2006
-    conference:
-      name: "Theory of Cryptography Conference"
-    doi: 10.1007/11681878_14
-
-  - type: article
-    authors:
-      - family-names: Engle
-        given-names: Robert F.
-    title: "Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation"
-    year: 1982
-    journal: Econometrica
-    volume: 50
-    issue: 4
-    pages: "987-1007"
-    doi: 10.2307/1912773
-
-  - type: article
-    authors:
-      - family-names: Joe
-        given-names: Harry
-    title: "Families of m-variate distributions with given margins and m(m-1)/2 bivariate dependence parameters"
-    year: 1996
-    journal: "Lecture Notes - Monograph Series"
-    volume: 28
-    pages: "120-141"
