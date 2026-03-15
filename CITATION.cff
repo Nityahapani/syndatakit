@@ -5,13 +5,12 @@ message: >
 
 title: "syndatakit: Production-grade synthetic data generation for econometrics and finance"
 
-version: 0.3.0
+version: 2.0.1
 date-released: "2026-03-15"
 
-license: BUSL-1.1
+license: MIT
 
 repository-code: https://github.com/Nityahapani/syndatakit
-url: https://syndatakit.com
 
 doi: 10.XXXXX/joss.XXXXX   # replace with JOSS DOI after acceptance
 
