@@ -1,0 +1,241 @@
+{
+  "engine_version": "v3",
+  "run_date": "2026-03-15T04:43:14.182173",
+  "n_synthetic_rows": 50000,
+  "methodology": "Gaussian copula generator with distribution-specific marginals. Fidelity = 0.45*marginal + 0.30*KS + 0.25*correlation. Marginal uses robust estimators (median+IQR) for kurt>10 variables. Ground truth: published aggregate statistics from cited sources.",
+  "fixes_applied": [
+    "Fix1: robust marginal scorer (median+IQR) for Pareto variables (kurt>10)",
+    "Fix2: regime-switching log-normal mixture for inflation",
+    "Fix3: three-group income mixture for World Bank GDP per capita",
+    "Fix4: skew-loss mixture for EDGAR net income margin",
+    "Fix5: zero-inflated + extreme-tail model for FDI pct GDP"
+  ],
+  "profiles": {
+    "fred_macro": {
+      "source": "Federal Reserve FRED 1960-2023 (annual release statistics)",
+      "n_samples": 50000,
+      "n_variables": 8,
+      "per_variable": {
+        "gdp_growth": {
+          "marginal": 87.21,
+          "ks": 98.17
+        },
+        "cpi_inflation": {
+          "marginal": 20.08,
+          "ks": 97.75
+        },
+        "fed_funds_rate": {
+          "marginal": 83.56,
+          "ks": 97.38
+        },
+        "unemployment": {
+          "marginal": 89.22,
+          "ks": 97.65
+        },
+        "m2_growth": {
+          "marginal": 91.93,
+          "ks": 97.62
+        },
+        "indpro_growth": {
+          "marginal": 83.75,
+          "ks": 98.35
+        },
+        "treasury_10y": {
+          "marginal": 91.43,
+          "ks": 97.02
+        },
+        "vix": {
+          "marginal": 91.5,
+          "ks": 96.9
+        }
+      },
+      "avg_marginal": 79.84,
+      "avg_ks": 97.61,
+      "correlation": 89.11,
+      "overall": 87.49
+    },
+    "hmda": {
+      "source": "CFPB HMDA LAR 2022 Public Dataset (aggregate statistics)",
+      "n_samples": 50000,
+      "n_variables": 7,
+      "per_variable": {
+        "loan_amount": {
+          "marginal": 74.99,
+          "ks": 98.08
+        },
+        "applicant_income": {
+          "marginal": 91.21,
+          "ks": 97.52
+        },
+        "dti_ratio": {
+          "marginal": 89.66,
+          "ks": 98.1
+        },
+        "ltv_ratio": {
+          "marginal": 94.89,
+          "ks": 97.15
+        },
+        "interest_rate": {
+          "marginal": 89.25,
+          "ks": 97.0
+        },
+        "loan_term": {
+          "marginal": 86.66,
+          "ks": 97.8
+        },
+        "property_value": {
+          "marginal": 74.92,
+          "ks": 97.47
+        }
+      },
+      "avg_marginal": 85.94,
+      "avg_ks": 97.59,
+      "correlation": 89.5,
+      "overall": 90.33
+    },
+    "bls": {
+      "source": "BLS QCEW Annual Employment and Wages 2022",
+      "n_samples": 50000,
+      "n_variables": 6,
+      "per_variable": {
+        "weekly_wage": {
+          "marginal": 96.11,
+          "ks": 98.42
+        },
+        "employment_growth": {
+          "marginal": 86.93,
+          "ks": 98.22
+        },
+        "avg_weekly_hours": {
+          "marginal": 91.7,
+          "ks": 95.97
+        },
+        "establishment_size": {
+          "marginal": 86.64,
+          "ks": 97.3
+        },
+        "turnover_rate": {
+          "marginal": 89.9,
+          "ks": 97.15
+        },
+        "labor_force_part": {
+          "marginal": 89.89,
+          "ks": 97.97
+        }
+      },
+      "avg_marginal": 90.2,
+      "avg_ks": 97.51,
+      "correlation": 92.0,
+      "overall": 92.84
+    },
+    "edgar": {
+      "source": "SEC XBRL Financial Data Set 2023 Q4 (DERA aggregate statistics)",
+      "n_samples": 50000,
+      "n_variables": 7,
+      "per_variable": {
+        "revenue": {
+          "marginal": 93.31,
+          "ks": 98.08
+        },
+        "net_income_margin": {
+          "marginal": 77.88,
+          "ks": 97.17
+        },
+        "ebitda_margin": {
+          "marginal": 87.34,
+          "ks": 98.17
+        },
+        "debt_to_equity": {
+          "marginal": 74.64,
+          "ks": 96.62
+        },
+        "current_ratio": {
+          "marginal": 93.63,
+          "ks": 97.55
+        },
+        "roa": {
+          "marginal": 89.03,
+          "ks": 97.47
+        },
+        "roe": {
+          "marginal": 91.6,
+          "ks": 97.47
+        }
+      },
+      "avg_marginal": 86.77,
+      "avg_ks": 97.51,
+      "correlation": 85.32,
+      "overall": 89.63
+    },
+    "world_bank": {
+      "source": "World Bank WDI 2022 (Development Indicators aggregate statistics)",
+      "n_samples": 50000,
+      "n_variables": 6,
+      "per_variable": {
+        "gdp_per_capita": {
+          "marginal": 93.56,
+          "ks": 97.65
+        },
+        "gdp_growth": {
+          "marginal": 87.68,
+          "ks": 96.35
+        },
+        "inflation": {
+          "marginal": 65.59,
+          "ks": 97.67
+        },
+        "trade_pct_gdp": {
+          "marginal": 92.7,
+          "ks": 96.8
+        },
+        "fdi_pct_gdp": {
+          "marginal": 54.65,
+          "ks": 97.67
+        },
+        "gov_debt_pct_gdp": {
+          "marginal": 77.83,
+          "ks": 98.3
+        }
+      },
+      "avg_marginal": 78.67,
+      "avg_ks": 97.41,
+      "correlation": 80.74,
+      "overall": 84.81
+    },
+    "fdic": {
+      "source": "FDIC Statistics on Depository Institutions 2023",
+      "n_samples": 50000,
+      "n_variables": 6,
+      "per_variable": {
+        "total_assets": {
+          "marginal": 99.7,
+          "ks": 98.42
+        },
+        "tier1_capital_ratio": {
+          "marginal": 95.57,
+          "ks": 97.32
+        },
+        "npl_ratio": {
+          "marginal": 78.19,
+          "ks": 97.15
+        },
+        "nim": {
+          "marginal": 91.81,
+          "ks": 96.65
+        },
+        "roa": {
+          "marginal": 89.93,
+          "ks": 97.1
+        },
+        "loan_deposit_ratio": {
+          "marginal": 93.78,
+          "ks": 96.15
+        }
+      },
+      "avg_marginal": 91.5,
+      "avg_ks": 97.13,
+      "correlation": 89.94,
+      "overall": 92.8
+    }
+  }
+}
