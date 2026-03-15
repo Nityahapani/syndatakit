@@ -1,6 +1,6 @@
 {
   "engine_version": "v3",
-  "run_date": "2026-03-15T04:43:14.182173",
+  "run_date": "2026-03-15T05:24:01.378648",
   "n_synthetic_rows": 50000,
   "methodology": "Gaussian copula generator with distribution-specific marginals. Fidelity = 0.45*marginal + 0.30*KS + 0.25*correlation. Marginal uses robust estimators (median+IQR) for kurt>10 variables. Ground truth: published aggregate statistics from cited sources.",
   "fixes_applied": [
@@ -35,6 +35,914 @@
         "m2_growth": {
           "marginal": 91.93,
           "ks": 97.62
+        },
+        "indpro_growth": {
+          "marginal": 83.75,
+          "ks": 98.35
+        },
+        "treasury_10y": {
+          "marginal": 91.43,
+          "ks": 97.02
+        },
+        "vix": {
+          "marginal": 91.5,
+          "ks": 96.9
+        }
+      },
+      "avg_marginal": 79.84,
+      "avg_ks": 97.61,
+      "correlation": 93.59,
+      "overall": 88.61
+    },
+    "hmda": {
+      "source": "CFPB HMDA LAR 2022 Public Dataset (aggregate statistics)",
+      "n_samples": 50000,
+      "n_variables": 7,
+      "per_variable": {
+        "loan_amount": {
+          "marginal": 74.99,
+          "ks": 98.08
+        },
+        "applicant_income": {
+          "marginal": 91.21,
+          "ks": 97.52
+        },
+        "dti_ratio": {
+          "marginal": 89.66,
+          "ks": 98.1
+        },
+        "ltv_ratio": {
+          "marginal": 94.89,
+          "ks": 97.15
+        },
+        "interest_rate": {
+          "marginal": 89.25,
+          "ks": 97.0
+        },
+        "loan_term": {
+          "marginal": 86.66,
+          "ks": 97.8
+        },
+        "property_value": {
+          "marginal": 74.92,
+          "ks": 97.47
+        }
+      },
+      "avg_marginal": 85.94,
+      "avg_ks": 97.59,
+      "correlation": 95.26,
+      "overall": 91.76
+    },
+    "bls": {
+      "source": "BLS QCEW Annual Employment and Wages 2022",
+      "n_samples": 50000,
+      "n_variables": 6,
+      "per_variable": {
+        "weekly_wage": {
+          "marginal": 96.11,
+          "ks": 98.42
+        },
+        "employment_growth": {
+          "marginal": 86.93,
+          "ks": 98.22
+        },
+        "avg_weekly_hours": {
+          "marginal": 91.7,
+          "ks": 95.97
+        },
+        "establishment_size": {
+          "marginal": 86.64,
+          "ks": 97.3
+        },
+        "turnover_rate": {
+          "marginal": 89.9,
+          "ks": 97.15
+        },
+        "labor_force_part": {
+          "marginal": 89.89,
+          "ks": 97.97
+        }
+      },
+      "avg_marginal": 90.2,
+      "avg_ks": 97.51,
+      "correlation": 98.65,
+      "overall": 94.5
+    },
+    "edgar": {
+      "source": "SEC XBRL Financial Data Set 2023 Q4 (DERA aggregate statistics)",
+      "n_samples": 50000,
+      "n_variables": 7,
+      "per_variable": {
+        "revenue": {
+          "marginal": 93.31,
+          "ks": 98.08
+        },
+        "net_income_margin": {
+          "marginal": 77.88,
+          "ks": 97.17
+        },
+        "ebitda_margin": {
+          "marginal": 87.34,
+          "ks": 98.17
+        },
+        "debt_to_equity": {
+          "marginal": 74.64,
+          "ks": 96.62
+        },
+        "current_ratio": {
+          "marginal": 93.63,
+          "ks": 97.55
+        },
+        "roa": {
+          "marginal": 89.03,
+          "ks": 97.47
+        },
+        "roe": {
+          "marginal": 91.6,
+          "ks": 97.47
+        }
+      },
+      "avg_marginal": 86.77,
+      "avg_ks": 97.51,
+      "correlation": 88.34,
+      "overall": 90.39
+    },
+    "world_bank": {
+      "source": "World Bank WDI 2022 (Development Indicators aggregate statistics)",
+      "n_samples": 50000,
+      "n_variables": 6,
+      "per_variable": {
+        "gdp_per_capita": {
+          "marginal": 93.34,
+          "ks": 98.12
+        },
+        "gdp_growth": {
+          "marginal": 87.68,
+          "ks": 97.12
+        },
+        "inflation": {
+          "marginal": 65.95,
+          "ks": 97.47
+        },
+        "trade_pct_gdp": {
+          "marginal": 92.7,
+          "ks": 97.32
+        },
+        "fdi_pct_gdp": {
+          "marginal": 54.5,
+          "ks": 94.38
+        },
+        "gov_debt_pct_gdp": {
+          "marginal": 77.83,
+          "ks": 97.47
+        }
+      },
+      "avg_marginal": 78.67,
+      "avg_ks": 96.98,
+      "correlation": 93.3,
+      "overall": 87.82
+    },
+    "fdic": {
+      "source": "FDIC Statistics on Depository Institutions 2023",
+      "n_samples": 50000,
+      "n_variables": 6,
+      "per_variable": {
+        "total_assets": {
+          "marginal": 99.7,
+          "ks": 98.42
+        },
+        "tier1_capital_ratio": {
+          "marginal": 95.57,
+          "ks": 97.32
+        },
+        "npl_ratio": {
+          "marginal": 78.19,
+          "ks": 97.15
+        },
+        "nim": {
+          "marginal": 91.81,
+          "ks": 96.65
+        },
+        "roa": {
+          "marginal": 89.93,
+          "ks": 97.1
+        },
+        "loan_deposit_ratio": {
+          "marginal": 93.78,
+          "ks": 96.15
+        }
+      },
+      "avg_marginal": 91.5,
+      "avg_ks": 97.13,
+      "correlation": 98.73,
+      "overall": 95.0
+    },
+    "equity_returns": {
+      "source": "CRSP/Compustat + Fama-French Data Library 1990-2023",
+      "n_samples": 50000,
+      "n_variables": 11,
+      "per_variable": {
+        "annual_return": {
+          "marginal": 86.88,
+          "ks": 97.02
+        },
+        "market_beta": {
+          "marginal": 91.38,
+          "ks": 96.85
+        },
+        "volatility_ann": {
+          "marginal": 96.86,
+          "ks": 97.97
+        },
+        "size_factor": {
+          "marginal": 92.98,
+          "ks": 97.95
+        },
+        "value_factor": {
+          "marginal": 95.99,
+          "ks": 97.08
+        },
+        "momentum_factor": {
+          "marginal": 83.23,
+          "ks": 97.32
+        },
+        "pe_ratio": {
+          "marginal": 27.15,
+          "ks": 97.25
+        },
+        "dividend_yield": {
+          "marginal": 70.62,
+          "ks": 97.8
+        },
+        "market_cap": {
+          "marginal": 81.53,
+          "ks": 96.45
+        },
+        "sharpe_ratio": {
+          "marginal": 95.05,
+          "ks": 96.12
+        },
+        "max_drawdown": {
+          "marginal": 86.76,
+          "ks": 97.0
+        }
+      },
+      "avg_marginal": 82.58,
+      "avg_ks": 97.17,
+      "correlation": 98.28,
+      "overall": 90.88
+    },
+    "corporate_bonds": {
+      "source": "TRACE/FINRA + SIFMA Fixed Income Statistics 2020-2023",
+      "n_samples": 50000,
+      "n_variables": 12,
+      "per_variable": {
+        "yield_to_maturity": {
+          "marginal": 92.05,
+          "ks": 98.25
+        },
+        "credit_spread": {
+          "marginal": 96.22,
+          "ks": 97.25
+        },
+        "duration": {
+          "marginal": 70.09,
+          "ks": 97.47
+        },
+        "coupon_rate": {
+          "marginal": 95.92,
+          "ks": 97.95
+        },
+        "time_to_maturity": {
+          "marginal": 38.15,
+          "ks": 96.8
+        },
+        "issue_size": {
+          "marginal": 75.76,
+          "ks": 97.25
+        },
+        "bid_ask_spread": {
+          "marginal": 78.35,
+          "ks": 98.15
+        },
+        "price": {
+          "marginal": 93.1,
+          "ks": 96.23
+        },
+        "rating_numeric": {
+          "marginal": 93.46,
+          "ks": 98.08
+        },
+        "z_spread": {
+          "marginal": 96.36,
+          "ks": 98.28
+        },
+        "default_probability": {
+          "marginal": 59.45,
+          "ks": 95.7
+        },
+        "recovery_rate": {
+          "marginal": 96.76,
+          "ks": 97.28
+        }
+      },
+      "avg_marginal": 82.14,
+      "avg_ks": 97.39,
+      "correlation": 98.55,
+      "overall": 90.82
+    },
+    "central_bank_rates": {
+      "source": "BIS Central Bank Policy Rates + IMF IFS 2022",
+      "n_samples": 50000,
+      "n_variables": 10,
+      "per_variable": {
+        "policy_rate": {
+          "marginal": 81.75,
+          "ks": 98.3
+        },
+        "real_rate": {
+          "marginal": 94.76,
+          "ks": 96.8
+        },
+        "rate_change_1y": {
+          "marginal": 90.43,
+          "ks": 98.17
+        },
+        "inflation_target": {
+          "marginal": 87.95,
+          "ks": 97.95
+        },
+        "output_gap": {
+          "marginal": 90.24,
+          "ks": 96.9
+        },
+        "fx_reserve_months": {
+          "marginal": 80.71,
+          "ks": 97.92
+        },
+        "cb_balance_sheet": {
+          "marginal": 54.87,
+          "ks": 95.75
+        },
+        "interbank_rate": {
+          "marginal": 81.33,
+          "ks": 97.7
+        },
+        "yield_curve_slope": {
+          "marginal": 92.15,
+          "ks": 97.47
+        },
+        "taylor_rule_gap": {
+          "marginal": 92.86,
+          "ks": 96.95
+        }
+      },
+      "avg_marginal": 84.7,
+      "avg_ks": 97.39,
+      "correlation": 98.49,
+      "overall": 91.96
+    },
+    "irs_soi": {
+      "source": "IRS Statistics of Income 2021 Individual Tax Returns",
+      "n_samples": 50000,
+      "n_variables": 11,
+      "per_variable": {
+        "agi": {
+          "marginal": 58.68,
+          "ks": 97.82
+        },
+        "wages_salaries": {
+          "marginal": 61.17,
+          "ks": 96.28
+        },
+        "capital_gains": {
+          "marginal": 87.12,
+          "ks": 96.08
+        },
+        "dividends": {
+          "marginal": 80.66,
+          "ks": 96.7
+        },
+        "taxes_paid": {
+          "marginal": 37.21,
+          "ks": 98.3
+        },
+        "effective_tax_rate": {
+          "marginal": 95.84,
+          "ks": 96.97
+        },
+        "deductions": {
+          "marginal": 63.25,
+          "ks": 95.9
+        },
+        "retirement_contrib": {
+          "marginal": 88.05,
+          "ks": 97.5
+        },
+        "self_employ_income": {
+          "marginal": 72.23,
+          "ks": 97.8
+        },
+        "rental_income": {
+          "marginal": 72.01,
+          "ks": 97.85
+        },
+        "number_dependents": {
+          "marginal": 95.8,
+          "ks": 97.12
+        }
+      },
+      "avg_marginal": 73.82,
+      "avg_ks": 97.12,
+      "correlation": 77.54,
+      "overall": 81.74
+    },
+    "census_acs": {
+      "source": "American Community Survey 5-Year Estimates 2022",
+      "n_samples": 50000,
+      "n_variables": 11,
+      "per_variable": {
+        "household_income": {
+          "marginal": 66.3,
+          "ks": 97.02
+        },
+        "median_home_value": {
+          "marginal": 79.65,
+          "ks": 96.25
+        },
+        "gross_rent": {
+          "marginal": 91.05,
+          "ks": 98.25
+        },
+        "housing_cost_burden": {
+          "marginal": 98.25,
+          "ks": 97.75
+        },
+        "poverty_rate": {
+          "marginal": 76.84,
+          "ks": 96.35
+        },
+        "unemployment_rate": {
+          "marginal": 81.6,
+          "ks": 98.2
+        },
+        "educational_attain": {
+          "marginal": 94.97,
+          "ks": 98.3
+        },
+        "homeownership_rate": {
+          "marginal": 97.26,
+          "ks": 97.45
+        },
+        "commute_time": {
+          "marginal": 96.56,
+          "ks": 96.62
+        },
+        "household_size": {
+          "marginal": 92.71,
+          "ks": 94.8
+        },
+        "gini_coefficient": {
+          "marginal": 95.14,
+          "ks": 95.7
+        }
+      },
+      "avg_marginal": 88.21,
+      "avg_ks": 96.97,
+      "correlation": 98.35,
+      "overall": 93.38
+    },
+    "insurance_claims": {
+      "source": "NAIC Schedule P Annual Statement 2022",
+      "n_samples": 50000,
+      "n_variables": 13,
+      "per_variable": {
+        "claim_amount": {
+          "marginal": 43.6,
+          "ks": 96.28
+        },
+        "loss_ratio": {
+          "marginal": 94.28,
+          "ks": 96.65
+        },
+        "expense_ratio": {
+          "marginal": 98.67,
+          "ks": 95.43
+        },
+        "combined_ratio": {
+          "marginal": 91.12,
+          "ks": 96.88
+        },
+        "claim_frequency": {
+          "marginal": 86.51,
+          "ks": 97.52
+        },
+        "severity": {
+          "marginal": 52.77,
+          "ks": 96.88
+        },
+        "development_factor": {
+          "marginal": 87.85,
+          "ks": 96.43
+        },
+        "reserve_ratio": {
+          "marginal": 97.63,
+          "ks": 95.73
+        },
+        "cat_loss_pct": {
+          "marginal": 70.75,
+          "ks": 96.65
+        },
+        "policy_duration": {
+          "marginal": 91.8,
+          "ks": 95.28
+        },
+        "premium": {
+          "marginal": 88.61,
+          "ks": 98.22
+        },
+        "retention_rate": {
+          "marginal": 93.61,
+          "ks": 98.08
+        },
+        "new_business_ratio": {
+          "marginal": 93.84,
+          "ks": 97.9
+        }
+      },
+      "avg_marginal": 83.93,
+      "avg_ks": 96.76,
+      "correlation": 96.74,
+      "overall": 90.98
+    },
+    "life_insurance": {
+      "source": "SOA/LIMRA Life Insurance Market Research 2022",
+      "n_samples": 50000,
+      "n_variables": 12,
+      "per_variable": {
+        "face_amount": {
+          "marginal": 64.73,
+          "ks": 98.25
+        },
+        "annual_premium": {
+          "marginal": 72.07,
+          "ks": 97.25
+        },
+        "age_at_issue": {
+          "marginal": 94.97,
+          "ks": 96.58
+        },
+        "policy_duration": {
+          "marginal": 60.05,
+          "ks": 97.55
+        },
+        "mortality_rate": {
+          "marginal": 54.39,
+          "ks": 97.67
+        },
+        "lapse_rate": {
+          "marginal": 81.5,
+          "ks": 97.1
+        },
+        "cash_value": {
+          "marginal": 60.23,
+          "ks": 98.3
+        },
+        "expense_ratio": {
+          "marginal": 97.95,
+          "ks": 96.95
+        },
+        "investment_return": {
+          "marginal": 91.73,
+          "ks": 97.82
+        },
+        "sum_at_risk": {
+          "marginal": 61.35,
+          "ks": 97.47
+        },
+        "persistency_ratio": {
+          "marginal": 96.18,
+          "ks": 96.35
+        },
+        "benefit_ratio": {
+          "marginal": 97.81,
+          "ks": 97.22
+        }
+      },
+      "avg_marginal": 77.75,
+      "avg_ks": 97.38,
+      "correlation": 98.95,
+      "overall": 88.94
+    },
+    "commercial_real_estate": {
+      "source": "NCREIF Property Index 2022 + CoStar Market Analytics",
+      "n_samples": 50000,
+      "n_variables": 15,
+      "per_variable": {
+        "cap_rate": {
+          "marginal": 92.05,
+          "ks": 97.6
+        },
+        "noi": {
+          "marginal": 65.62,
+          "ks": 97.92
+        },
+        "occupancy_rate": {
+          "marginal": 96.11,
+          "ks": 96.03
+        },
+        "price_per_sqft": {
+          "marginal": 92.69,
+          "ks": 98.4
+        },
+        "loan_to_value": {
+          "marginal": 97.13,
+          "ks": 95.58
+        },
+        "debt_service_cov": {
+          "marginal": 97.77,
+          "ks": 97.75
+        },
+        "total_return": {
+          "marginal": 87.43,
+          "ks": 97.55
+        },
+        "income_return": {
+          "marginal": 94.82,
+          "ks": 97.88
+        },
+        "appreciation_ret": {
+          "marginal": 86.56,
+          "ks": 94.9
+        },
+        "vacancy_rate": {
+          "marginal": 82.01,
+          "ks": 97.32
+        },
+        "rent_per_sqft": {
+          "marginal": 94.67,
+          "ks": 97.58
+        },
+        "building_age": {
+          "marginal": 51.03,
+          "ks": 97.25
+        },
+        "sq_footage": {
+          "marginal": 60.31,
+          "ks": 97.0
+        },
+        "expense_ratio": {
+          "marginal": 95.9,
+          "ks": 97.65
+        },
+        "market_rental_grwth": {
+          "marginal": 92.69,
+          "ks": 96.15
+        }
+      },
+      "avg_marginal": 85.79,
+      "avg_ks": 97.1,
+      "correlation": 98.44,
+      "overall": 92.34
+    },
+    "rental_market": {
+      "source": "HUD Fair Market Rents 2022 + Zillow Observed Rent Index",
+      "n_samples": 50000,
+      "n_variables": 13,
+      "per_variable": {
+        "monthly_rent": {
+          "marginal": 97.34,
+          "ks": 96.28
+        },
+        "rent_to_income": {
+          "marginal": 98.01,
+          "ks": 96.7
+        },
+        "vacancy_rate": {
+          "marginal": 91.99,
+          "ks": 95.62
+        },
+        "rent_growth_1y": {
+          "marginal": 91.0,
+          "ks": 97.75
+        },
+        "bedrooms": {
+          "marginal": 94.68,
+          "ks": 97.12
+        },
+        "sqft": {
+          "marginal": 94.45,
+          "ks": 97.02
+        },
+        "building_age": {
+          "marginal": 56.77,
+          "ks": 96.38
+        },
+        "walk_score": {
+          "marginal": 98.55,
+          "ks": 95.7
+        },
+        "distance_to_cbd": {
+          "marginal": 67.79,
+          "ks": 96.35
+        },
+        "lease_term": {
+          "marginal": 94.65,
+          "ks": 94.92
+        },
+        "deposit_amount": {
+          "marginal": 91.34,
+          "ks": 98.22
+        },
+        "utility_inclusion": {
+          "marginal": 97.32,
+          "ks": 97.97
+        },
+        "pets_allowed": {
+          "marginal": 97.82,
+          "ks": 95.5
+        }
+      },
+      "avg_marginal": 90.13,
+      "avg_ks": 96.58,
+      "correlation": 98.42,
+      "overall": 94.14
+    },
+    "retail_transactions": {
+      "source": "Federal Reserve Payments Study 2022",
+      "n_samples": 50000,
+      "n_variables": 12,
+      "per_variable": {
+        "transaction_amount": {
+          "marginal": 94.02,
+          "ks": 98.25
+        },
+        "daily_balance": {
+          "marginal": 34.5,
+          "ks": 96.95
+        },
+        "monthly_txn_count": {
+          "marginal": 84.9,
+          "ks": 96.72
+        },
+        "overdraft_rate": {
+          "marginal": 74.6,
+          "ks": 97.65
+        },
+        "credit_util": {
+          "marginal": 97.31,
+          "ks": 97.62
+        },
+        "debit_pct": {
+          "marginal": 98.11,
+          "ks": 96.65
+        },
+        "digital_channel_pct": {
+          "marginal": 98.07,
+          "ks": 96.33
+        },
+        "months_as_customer": {
+          "marginal": 58.25,
+          "ks": 95.75
+        },
+        "products_held": {
+          "marginal": 85.46,
+          "ks": 98.25
+        },
+        "age": {
+          "marginal": 96.28,
+          "ks": 97.17
+        },
+        "card_spend_monthly": {
+          "marginal": 77.8,
+          "ks": 96.83
+        },
+        "direct_deposit": {
+          "marginal": 97.79,
+          "ks": 96.53
+        }
+      },
+      "avg_marginal": 83.09,
+      "avg_ks": 97.06,
+      "correlation": 98.47,
+      "overall": 91.13
+    },
+    "commodity_prices": {
+      "source": "EIA + USDA + LME Commodity Price Statistics 2022",
+      "n_samples": 50000,
+      "n_variables": 13,
+      "per_variable": {
+        "crude_oil_return": {
+          "marginal": 89.84,
+          "ks": 96.28
+        },
+        "nat_gas_return": {
+          "marginal": 85.07,
+          "ks": 96.97
+        },
+        "gold_return": {
+          "marginal": 92.97,
+          "ks": 95.2
+        },
+        "copper_return": {
+          "marginal": 90.02,
+          "ks": 97.72
+        },
+        "wheat_return": {
+          "marginal": 89.01,
+          "ks": 97.62
+        },
+        "corn_return": {
+          "marginal": 89.46,
+          "ks": 96.38
+        },
+        "silver_return": {
+          "marginal": 92.9,
+          "ks": 97.52
+        },
+        "wti_brent_spread": {
+          "marginal": 83.86,
+          "ks": 95.93
+        },
+        "commodity_vol_idx": {
+          "marginal": 95.88,
+          "ks": 96.28
+        },
+        "inventory_days": {
+          "marginal": 97.33,
+          "ks": 94.33
+        },
+        "production_growth": {
+          "marginal": 89.44,
+          "ks": 96.7
+        },
+        "usd_index_chg": {
+          "marginal": 90.9,
+          "ks": 97.67
+        },
+        "spot_futures_basis": {
+          "marginal": 90.21,
+          "ks": 94.88
+        }
+      },
+      "avg_marginal": 90.53,
+      "avg_ks": 96.42,
+      "correlation": 98.74,
+      "overall": 94.35
+    },
+    "cftc": {
+      "source": "CFTC Commitments of Traders Weekly Reports 2022",
+      "n_samples": 50000,
+      "n_variables": 10,
+      "per_variable": {
+        "commercial_long": {
+          "marginal": 96.62,
+          "ks": 98.3
+        },
+        "commercial_short": {
+          "marginal": 96.08,
+          "ks": 96.8
+        },
+        "noncomm_long": {
+          "marginal": 96.52,
+          "ks": 98.25
+        },
+        "noncomm_short": {
+          "marginal": 97.06,
+          "ks": 97.67
+        },
+        "open_interest": {
+          "marginal": 83.09,
+          "ks": 96.97
+        },
+        "net_spec_position": {
+          "marginal": 94.06,
+          "ks": 97.7
+        },
+        "change_in_oi": {
+          "marginal": 84.45,
+          "ks": 96.55
+        },
+        "concentration_top4": {
+          "marginal": 97.61,
+          "ks": 97.15
+        },
+        "spreading_traders": {
+          "marginal": 72.59,
+          "ks": 97.55
+        },
+        "hedging_pressure": {
+          "marginal": 96.15,
+          "ks": 97.12
+        }
+      },
+      "avg_marginal": 91.42,
+      "avg_ks": 97.41,
+      "correlation": 98.57,
+      "overall": 95.0
+    }
+  }
+}          "ks": 97.62
         },
         "indpro_growth": {
           "marginal": 83.75,
