@@ -4,6 +4,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/syndatakit)](https://pypi.org/project/syndatakit/)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue)](https://pypi.org/project/syndatakit/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://img.shields.io/badge/tests-168%20passing-brightgreen)](https://github.com/Nityahapani/syndatakit/actions)
 
 ```
