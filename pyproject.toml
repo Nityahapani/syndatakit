@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name            = "syndatakit"
-version         = "2.0.2"
+version         = "2.0.1"
 description     = "Research-grade synthetic data for finance & econometrics"
 readme          = "README.md"
 license         = { text = "MIT" }
