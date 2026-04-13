@@ -1,4 +1,3 @@
----
 title: 'syndatakit: Production-grade synthetic data generation for econometrics and finance'
 tags:
   - Python
